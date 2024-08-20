@@ -1,26 +1,31 @@
 package application.controller;
-
+ 
 import java.util.Optional;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import application.model.Tarefa;
 import application.repository.TarefaRepository;
+ 
 
+ 
 @RestController
 @RequestMapping("/tarefa")
 public class TarefaController {
+   
     @Autowired
     private TarefaRepository tarefaRepo;
-
+ 
     @GetMapping
     public Iterable<Tarefa> list() {
         return tarefaRepo.findAll();
@@ -33,24 +38,45 @@ public class TarefaController {
  
     @GetMapping("/{id}")
     public Tarefa details(@PathVariable long id) {
-        Optional<Tarefa> tarefas = tarefaRepo.findById(id);
-        return tarefas.get();
+        Optional<Tarefa> resultado = tarefaRepo.findById(id);
+        if(resultado.isEmpty()){
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Sem Tarefa"
+            );
+        }
+        return resultado.get();
     }
  
     @PutMapping("/{id}")
     public Tarefa put(
         @PathVariable long id,
-        @RequestBody Tarefa dados) {
-        Optional<Tarefa> tarefas = tarefaRepo.findById(id);
+        @RequestBody Tarefa novosDados) {
+        Optional<Tarefa> resultado = tarefaRepo.findById(id);
+        if(resultado.isEmpty()){
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Sem Tarefa"
+            );
+        }
+
+        if(novosDados.getDescricao().isEmpty() ){
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Descrição Invalida"
+            );
+        }
  
-        tarefas.get().setDescricao(dados.getDescricao());
-        tarefas.get().setConcluido(dados.isConcluido());
-        return tarefaRepo.save(tarefas.get());
+        resultado.get().setDescricao(novosDados.getDescricao());
+        resultado.get().setConcluido(novosDados.isConcluido());
+        return tarefaRepo.save(resultado.get());
     }
  
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-     tarefaRepo.deleteById(id);
+        if(!tarefaRepo.existsById(id)){
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Sem Tarefa"
+            );
+        }
+        tarefaRepo.deleteById(id);
     }
-
+ 
 }
