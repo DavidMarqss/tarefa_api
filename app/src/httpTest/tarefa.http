@@ -1,4 +1,4 @@
-@baseUrl = https://8080-davidmarqss-apijava-6o9o4ang5m1.ws-us115.gitpod.io
+@baseUrl = https://8080-davidmarqss-tarefaapi-59rm02etfm2.ws-us115.gitpod.io
  
 ###
 GET {{baseUrl}}/tarefa
@@ -8,8 +8,8 @@ POST {{baseUrl}}/tarefa
 Content-Type: application/json
  
 {
-    "descricao": "Descrição 1",
-    "concluido": false
+    "descricao": "Descrição 2",
+    "concluido": true
 }
  
 ###

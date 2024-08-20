@@ -14,21 +14,20 @@ public class Tarefa{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
-    private String decricao;
+    private String descricao;
     @Column(nullable = false)
     private boolean concluido;
-    
     public long getId() {
         return id;
     }
     public void setId(long id) {
         this.id = id;
     }
-    public String getDecricao() {
-        return decricao;
+    public String getDescricao() {
+        return descricao;
     }
-    public void setDecricao(String decricao) {
-        this.decricao = decricao;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
     public boolean isConcluido() {
         return concluido;
@@ -36,6 +35,7 @@ public class Tarefa{
     public void setConcluido(boolean concluido) {
         this.concluido = concluido;
     }
-
+    
+   
     
 }
